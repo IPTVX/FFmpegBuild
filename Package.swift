@@ -5,8 +5,9 @@ import PackageDescription
 let package = Package(
     name: "AetherFFmpegBuild",
     platforms: [
-        .iOS(.v16),
-        .tvOS(.v16),
+        // IPTVX keeps its OS 15 app baseline and runtime-gates Aether playback to OS 17.
+        .iOS(.v15),
+        .tvOS(.v15),
         .macOS(.v14),
         .visionOS(.v1),
     ],
