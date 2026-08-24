@@ -665,9 +665,9 @@ fix_install_names() {
     install_name_tool -id "@rpath/${SUBPATH}" "${BIN}"
 
     local PAIRS=(
-        "libavcodec:Libavcodec" "libavformat:Libavformat" "libavutil:Libavutil"
-        "libswresample:Libswresample" "libswscale:Libswscale" "libavfilter:Libavfilter"
-        "libdav1d:Libdav1d" "libzimg:Libzimg" "libzvbi:Libzvbi"
+        "libavcodec:AetherLibavcodec" "libavformat:AetherLibavformat" "libavutil:AetherLibavutil"
+        "libswresample:AetherLibswresample" "libswscale:AetherLibswscale" "libavfilter:AetherLibavfilter"
+        "libdav1d:AetherLibdav1d" "libzimg:AetherLibzimg" "libzvbi:AetherLibzvbi"
     )
     local DEPS
     DEPS=(${(f)"$(otool -L "${BIN}" | awk 'NR>1 {print $1}')"})
@@ -716,6 +716,18 @@ make_framework() {
     elif [[ -d "${HEADER_SRC}" ]]; then
         cp -R "${HEADER_SRC}/"* "${FW_DIR}/Headers/"
     fi
+
+    # The namespaced framework identities must also be reflected in public C
+    # header imports. Otherwise Clang resolves <libavutil/...> against another
+    # same-named framework in the host app instead of AetherLibavutil.
+    find "${FW_DIR}/Headers" -type f -name '*.h' -exec perl -pi -e '
+        s#([<"])libavcodec/#${1}AetherLibavcodec/#g;
+        s#([<"])libavformat/#${1}AetherLibavformat/#g;
+        s#([<"])libavutil/#${1}AetherLibavutil/#g;
+        s#([<"])libswresample/#${1}AetherLibswresample/#g;
+        s#([<"])libswscale/#${1}AetherLibswscale/#g;
+        s#([<"])libavfilter/#${1}AetherLibavfilter/#g;
+    ' {} +
 
     # Remove platform-specific hwcontext headers (FFmpeg only)
     if [[ "${LIB}" == lib* ]]; then
@@ -837,7 +849,7 @@ make_xcframeworks() {
     echo ""
     echo "━━━ Creating XCFrameworks ━━━"
 
-    local PAIRS=("libavcodec:Libavcodec" "libavformat:Libavformat" "libavutil:Libavutil" "libswresample:Libswresample" "libswscale:Libswscale" "libavfilter:Libavfilter" "dav1d:Libdav1d" "zimg:Libzimg" "zvbi:Libzvbi")
+    local PAIRS=("libavcodec:AetherLibavcodec" "libavformat:AetherLibavformat" "libavutil:AetherLibavutil" "libswresample:AetherLibswresample" "libswscale:AetherLibswscale" "libavfilter:AetherLibavfilter" "dav1d:AetherLibdav1d" "zimg:AetherLibzimg" "zvbi:AetherLibzvbi")
 
     for PAIR in "${PAIRS[@]}"; do
         local LIB="${PAIR%%:*}"
