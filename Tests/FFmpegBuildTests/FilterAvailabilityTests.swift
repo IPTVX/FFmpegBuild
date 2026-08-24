@@ -1,5 +1,5 @@
 import Testing
-import Libavfilter
+import AetherLibavfilter
 
 /// Proves the zscale + tonemap filters (and the graph endpoints) are
 /// actually compiled into the shipped libavfilter. `avfilter_get_by_name`

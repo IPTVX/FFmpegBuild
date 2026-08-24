@@ -1,4 +1,4 @@
-<h1 align="center">FFmpegBuild</h1>
+<h1 align="center">AetherFFmpegBuild</h1>
 
 <p align="center">
   <b>Slim FFmpeg xcframeworks for Apple platforms.</b><br>
@@ -6,9 +6,7 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/superuser404notfound/FFmpegBuild/releases/latest"><img src="https://img.shields.io/github/v/release/superuser404notfound/FFmpegBuild?label=release&color=blue"></a>
-  <a href="https://swiftpackageindex.com/superuser404notfound/FFmpegBuild"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fsuperuser404notfound%2FFFmpegBuild%2Fbadge%3Ftype%3Dswift-versions"></a>
-  <a href="https://swiftpackageindex.com/superuser404notfound/FFmpegBuild"><img src="https://img.shields.io/endpoint?url=https%3A%2F%2Fswiftpackageindex.com%2Fapi%2Fpackages%2Fsuperuser404notfound%2FFFmpegBuild%2Fbadge%3Ftype%3Dplatforms"></a>
+  <a href="https://github.com/IPTVX/FFmpegBuild/releases/latest"><img src="https://img.shields.io/github/v/release/IPTVX/FFmpegBuild?label=release&color=blue"></a>
   <img src="https://img.shields.io/badge/FFmpeg-8.1-brightgreen">
   <img src="https://img.shields.io/badge/dav1d-1.5.1-blue">
   <img src="https://img.shields.io/badge/license-LGPL--2.1-lightgrey">
@@ -16,6 +14,13 @@
 </p>
 
 ---
+
+This is an IPTVX namespace-only fork of
+[FFmpegBuild 2.4.3](https://github.com/superuser404notfound/FFmpegBuild/tree/2.4.3).
+The compiled codec implementation is unchanged. Frameworks, Clang modules,
+public header imports, bundle identifiers, and Mach-O references use the
+`Aether` prefix so this package can coexist with another FFmpeg distribution
+inside the same app.
 
 ## Why
 
@@ -68,16 +73,19 @@ Output lands in `Sources/` as xcframeworks, ready to consume via Swift Package M
 ```swift
 // Package.swift
 dependencies: [
-    .package(url: "https://github.com/superuser404notfound/FFmpegBuild", from: "1.0.0")
+    .package(url: "https://github.com/IPTVX/FFmpegBuild", exact: "2.4.3-iptvx")
 ]
 
 // Target:
-.product(name: "FFmpegBuild", package: "FFmpegBuild")
+.product(name: "AetherFFmpegBuild", package: "FFmpegBuild")
 ```
 
-Pin `branch: "main"` instead of a version if you want to track the latest rebuilds (that is how [AetherEngine](https://github.com/superuser404notfound/AetherEngine) consumes it).
-
-Then import the modules you need: `Libavformat`, `Libavcodec`, `Libavutil`, `Libswresample`, `Libswscale`, `Libavfilter`, `Libdav1d`. (`Libzimg` is a link-only backend for `zscale`, and `Libzvbi` a link-only backend for the teletext decoder; you don't import either directly.) The umbrella `FFmpegBuild` product links all of them plus the system frameworks (AudioToolbox, CoreMedia, CoreVideo, VideoToolbox) in one shot.
+Then import the modules you need: `AetherLibavformat`, `AetherLibavcodec`,
+`AetherLibavutil`, `AetherLibswresample`, `AetherLibswscale`,
+`AetherLibavfilter`, `AetherLibdav1d`. (`AetherLibzimg` and
+`AetherLibzvbi` remain link-only backends.) The umbrella
+`AetherFFmpegBuild` product links all of them plus the required system
+frameworks.
 
 ## Decoder support
 

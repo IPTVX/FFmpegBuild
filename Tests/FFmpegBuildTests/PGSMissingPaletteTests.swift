@@ -1,5 +1,5 @@
 import Testing
-import Libavcodec
+import AetherLibavcodec
 
 /// Proves the `pgs-missing-palette` patch (build.sh `patch_ffmpeg_pgssub`) is in the
 /// shipped libavcodec and behaves as intended.
