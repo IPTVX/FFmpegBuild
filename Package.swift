@@ -3,7 +3,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "FFmpegBuild",
+    name: "AetherFFmpegBuild",
     platforms: [
         .iOS(.v16),
         .tvOS(.v16),
@@ -12,34 +12,34 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "FFmpegBuild",
-            targets: ["FFmpegBuild"]
+            name: "AetherFFmpegBuild",
+            targets: ["AetherFFmpegBuild"]
         ),
         // Individual libraries for consumers that want fine-grained control
-        .library(name: "Libavcodec", targets: ["Libavcodec"]),
-        .library(name: "Libavformat", targets: ["Libavformat"]),
-        .library(name: "Libavutil", targets: ["Libavutil"]),
-        .library(name: "Libswresample", targets: ["Libswresample"]),
-        .library(name: "Libswscale", targets: ["Libswscale"]),
-        .library(name: "Libdav1d", targets: ["Libdav1d"]),
-        .library(name: "Libavfilter", targets: ["Libavfilter"]),
-        .library(name: "Libzimg", targets: ["Libzimg"]),
-        .library(name: "Libzvbi", targets: ["Libzvbi"]),
+        .library(name: "AetherLibavcodec", targets: ["AetherLibavcodec"]),
+        .library(name: "AetherLibavformat", targets: ["AetherLibavformat"]),
+        .library(name: "AetherLibavutil", targets: ["AetherLibavutil"]),
+        .library(name: "AetherLibswresample", targets: ["AetherLibswresample"]),
+        .library(name: "AetherLibswscale", targets: ["AetherLibswscale"]),
+        .library(name: "AetherLibdav1d", targets: ["AetherLibdav1d"]),
+        .library(name: "AetherLibavfilter", targets: ["AetherLibavfilter"]),
+        .library(name: "AetherLibzimg", targets: ["AetherLibzimg"]),
+        .library(name: "AetherLibzvbi", targets: ["AetherLibzvbi"]),
     ],
     targets: [
         // Umbrella target that links all FFmpeg libraries + dav1d + system frameworks
         .target(
-            name: "FFmpegBuild",
+            name: "AetherFFmpegBuild",
             dependencies: [
-                "Libavcodec",
-                "Libavformat",
-                "Libavutil",
-                "Libswresample",
-                "Libswscale",
-                "Libavfilter",
-                "Libdav1d",
-                "Libzimg",
-                "Libzvbi",
+                "AetherLibavcodec",
+                "AetherLibavformat",
+                "AetherLibavutil",
+                "AetherLibswresample",
+                "AetherLibswscale",
+                "AetherLibavfilter",
+                "AetherLibdav1d",
+                "AetherLibzimg",
+                "AetherLibzvbi",
             ],
             path: "Sources/FFmpegBuild",
             linkerSettings: [
@@ -54,18 +54,18 @@ let package = Package(
             ]
         ),
         // Prebuilt xcframeworks (created by build.sh)
-        .binaryTarget(name: "Libavcodec", path: "Sources/Libavcodec.xcframework"),
-        .binaryTarget(name: "Libavformat", path: "Sources/Libavformat.xcframework"),
-        .binaryTarget(name: "Libavutil", path: "Sources/Libavutil.xcframework"),
-        .binaryTarget(name: "Libswresample", path: "Sources/Libswresample.xcframework"),
-        .binaryTarget(name: "Libswscale", path: "Sources/Libswscale.xcframework"),
-        .binaryTarget(name: "Libdav1d", path: "Sources/Libdav1d.xcframework"),
-        .binaryTarget(name: "Libavfilter", path: "Sources/Libavfilter.xcframework"),
-        .binaryTarget(name: "Libzimg", path: "Sources/Libzimg.xcframework"),
-        .binaryTarget(name: "Libzvbi", path: "Sources/Libzvbi.xcframework"),
+        .binaryTarget(name: "AetherLibavcodec", path: "Sources/AetherLibavcodec.xcframework"),
+        .binaryTarget(name: "AetherLibavformat", path: "Sources/AetherLibavformat.xcframework"),
+        .binaryTarget(name: "AetherLibavutil", path: "Sources/AetherLibavutil.xcframework"),
+        .binaryTarget(name: "AetherLibswresample", path: "Sources/AetherLibswresample.xcframework"),
+        .binaryTarget(name: "AetherLibswscale", path: "Sources/AetherLibswscale.xcframework"),
+        .binaryTarget(name: "AetherLibdav1d", path: "Sources/AetherLibdav1d.xcframework"),
+        .binaryTarget(name: "AetherLibavfilter", path: "Sources/AetherLibavfilter.xcframework"),
+        .binaryTarget(name: "AetherLibzimg", path: "Sources/AetherLibzimg.xcframework"),
+        .binaryTarget(name: "AetherLibzvbi", path: "Sources/AetherLibzvbi.xcframework"),
         .testTarget(
             name: "FFmpegBuildTests",
-            dependencies: ["FFmpegBuild", "Libavfilter", "Libavutil"],
+            dependencies: ["AetherFFmpegBuild", "AetherLibavfilter", "AetherLibavutil"],
             path: "Tests/FFmpegBuildTests"
         ),
     ]
