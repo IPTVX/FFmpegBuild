@@ -1060,22 +1060,19 @@ framework module ${FW} [system] {
     export *
 }
 EOF
-    # Info.plist: App Store submission rejects bundles missing
-    # CFBundleShortVersionString or MinimumOSVersion (ITMS-90057,
-    # ITMS-90360), and ALSO rejects when an embedded framework's
-    # MinimumOSVersion is *lower* than the host app's deployment
-    # target (ITMS-90208). We pick floors that match the apps that
-    # actually consume this build (JellySeeTV is tvOS 26+).
+    # The bundle floor must match the binary's deployment target, not the SDK
+    # or a consuming app's floor. All iOS/tvOS build targets below use 16.0;
+    # declaring 26.0 here prevents those frameworks from supporting OS 16.
     local MIN_OS SUPPORTED_PLATFORM
     case "${PLATFORM}" in
-        ios)         MIN_OS="26.0"; SUPPORTED_PLATFORM="iPhoneOS" ;;
-        isimulator)  MIN_OS="26.0"; SUPPORTED_PLATFORM="iPhoneSimulator" ;;
-        tvos)        MIN_OS="26.0"; SUPPORTED_PLATFORM="AppleTVOS" ;;
-        tvsimulator) MIN_OS="26.0"; SUPPORTED_PLATFORM="AppleTVSimulator" ;;
+        ios)         MIN_OS="16.0"; SUPPORTED_PLATFORM="iPhoneOS" ;;
+        isimulator)  MIN_OS="16.0"; SUPPORTED_PLATFORM="iPhoneSimulator" ;;
+        tvos)        MIN_OS="16.0"; SUPPORTED_PLATFORM="AppleTVOS" ;;
+        tvsimulator) MIN_OS="16.0"; SUPPORTED_PLATFORM="AppleTVSimulator" ;;
         xros)        MIN_OS="1.0";  SUPPORTED_PLATFORM="XROS" ;;
         xrsimulator) MIN_OS="1.0";  SUPPORTED_PLATFORM="XRSimulator" ;;
         macos)       MIN_OS="14.0"; SUPPORTED_PLATFORM="MacOSX" ;;
-        *)           MIN_OS="26.0"; SUPPORTED_PLATFORM="iPhoneOS" ;;
+        *)           echo "ERROR: unsupported framework platform: ${PLATFORM}"; return 1 ;;
     esac
 
     cat > "${FW_DIR}/Info.plist" << EOF
