@@ -9,5 +9,5 @@
 <key>CFBundlePackageType</key><string>FMWK</string>
 <key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
 <key>CFBundleSupportedPlatforms</key><array><string>AppleTVSimulator</string></array>
-<key>MinimumOSVersion</key><string>26.0</string>
+<key>MinimumOSVersion</key><string>16.0</string>
 </dict></plist>
