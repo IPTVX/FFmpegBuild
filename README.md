@@ -32,7 +32,7 @@ Full FFmpeg builds for iOS land at 40-70 MB because they bundle a TLS stack, enc
 | libavutil      | Shared primitives                                     |
 | libswresample  | Audio resampling / channel remap / format convert     |
 | libswscale     | Pixel-format convert (YUV → NV12 / P010) for the SW-decode path |
-| libavfilter    | Trimmed filter set: zscale + tonemap + colorspace for HDR → SDR still extraction, bwdif + yadif for CPU deinterlacing on the SW-decode path, yadif_videotoolbox + hwupload for GPU (Metal) deinterlacing of VideoToolbox frames |
+| libavfilter    | Trimmed filter set: zscale + tonemap + colorspace for HDR → SDR still extraction, bwdif + yadif for CPU deinterlacing on the SW-decode path, idet + fieldmatch + decimate for inverse telecine, yadif_videotoolbox + hwupload for GPU (Metal) deinterlacing of VideoToolbox frames, dialoguenhance + pan + acompressor + alimiter (with abuffer / abuffersink / aformat / aresample) for AetherEngine's audio shaping |
 | **dav1d**      | Fast AV1 software decoder (separate xcframework)      |
 | **zimg**       | zscale's resampling / colorspace backend (separate xcframework, link-only) |
 | **libzvbi**    | DVB teletext decoder backend for `libzvbi_teletext` (separate xcframework, link-only) |
@@ -45,7 +45,7 @@ Anything the app layer should already handle or doesn't need:
 - Encoders, except FLAC and EAC3 (kept for the audio bridge that re-encodes non-streamable sources like TrueHD / DTS / DTS-HD MA. FLAC for the lossless 7.1 path, EAC3 5.1 for the default soundbar-compat path that surfaces surround via HDMI bitstream tunnel; AAC-LC, ALAC and the AC-3 encoder E-AC-3 pulls in, for the silence AetherEngine appends to a stream-copied track whose audio ends before its video, AetherEngine#847)
 - Muxers, except MP4 / MOV / HLS (kept for the HLS-fMP4 producer that wraps streams for AVPlayer)
 - libavdevice (libavfilter is included but trimmed to a handful of filters, see In)
-- Most filters: libavfilter ships only buffer / buffersink / format / scale / zscale / tonemap / colorspace / bwdif / yadif / yadif_videotoolbox / hwupload
+- Most filters: libavfilter ships only buffer / buffersink / format / scale / zscale / tonemap / colorspace / bwdif / yadif / idet / fieldmatch / decimate / yadif_videotoolbox / hwupload, and on the audio side abuffer / abuffersink / aformat / aresample / pan / dialoguenhance / acompressor / alimiter
 - Programs (`ffmpeg`, `ffplay`, `ffprobe`)
 - Hardware accel layers other than VideoToolbox
 - Text subtitle rendering (do that in SwiftUI)
@@ -63,12 +63,41 @@ Needs Xcode 16+ and roughly 10-30 minutes depending on your machine. All sources
 
 Output lands in `Sources/` as xcframeworks, ready to consume via Swift Package Manager. The shipped xcframeworks contain **dynamic frameworks** (dylib-in-framework, `@rpath` install names); Xcode embeds and signs them in the app bundle automatically when you link the package. That is what keeps the LGPL relink requirement satisfiable for closed-source apps, see License below.
 
+## IPTVX fork compatibility
+
+`3.11.0-iptvx` integrates the complete upstream `3.11.0` release and preserves
+iOS 16 / tvOS 16 in the package manifest, framework metadata, and compiled
+binaries. macOS 14 and visionOS 1 remain the other deployment floors. The
+upstream FFmpeg patches, dynamic Aether framework names, privacy manifests,
+license notices, and device/macOS dSYMs remain included. DTS:X standard
+presentation heights use FFmpeg's opt-in `dca` `x_heights` decoder option;
+this package adds no LibDTSX or Rust decoder dependency.
+
+After `./build.sh`, audit every shipped slice with:
+
+```sh
+python3 -m unittest discover -s Tests/Packaging -v
+python3 Scripts/verify_deployment_targets.py
+```
+
+`BUILD-INFO.txt` records patched source revisions, configure flags, toolchain,
+and SHA-256 checksums for the distributed artifacts. Binary and dSYM UUIDs
+must remain paired; lowering the manifest alone is not an OS compatibility
+check. Run the `FFmpegBuildTests` suite through FlowDeck to verify decoder,
+filter, privacy, license, and binary-patch behavior against the rebuilt package.
+
+The `3.11.0-iptvx` rebuild was validated with all 63 platform entries / 90
+architectures, 45 matching shipped dSYM architectures, and 21 privacy manifests.
+The complete macOS regression suite passed 40 tests, and the packaging audit
+passed 9 tests. These build and binary checks do not establish physical-device
+playback or an OS 16 runtime result.
+
 ## Use
 
 ```swift
 // Package.swift
 dependencies: [
-    .package(url: "https://github.com/superuser404notfound/FFmpegBuild", from: "3.10.1")
+    .package(url: "https://github.com/IPTVX/FFmpegBuild", exact: "3.11.0-iptvx")
 ]
 
 // Target:
@@ -128,6 +157,12 @@ The libraries compile with `-gline-tables-only`: function names, file and line, 
 Simulator slices ship without dSYMs deliberately. They reach neither an archive nor a user's crash report, and they would put another 45 MB of binaries into every clone. `./build.sh` writes theirs to `build/dsyms` if you want them locally.
 
 Symbols and binaries are a pair per build. A dSYM from one release symbolicates nothing in an app that shipped another, because the UUIDs differ, and releases before 3.3.0 have no dSYMs at all: the debug information was never compiled in, so it cannot be produced for them after the fact.
+
+## Privacy manifest
+
+The frameworks that call one of Apple's required-reason APIs carry their own `PrivacyInfo.xcprivacy`, so an app embedding them does not declare FFmpeg's calls on its behalf and App Store Connect does not answer the upload with ITMS-91053 (FFmpegBuild#10). Today that is `AetherLibavformat`, `AetherLibavutil` and `AetherLibzvbi`, which `stat` files: file timestamp, reasons C617.1 (files in the app's own container) and 3B52.1 (media the user opened). None of them tracks or collects anything.
+
+`build.sh` derives each manifest from the symbols the shipped binary imports, so an update that starts or stops calling one of these APIs changes the manifest with it, and `PrivacyManifestTests` checks the committed frameworks against their own symbol tables.
 
 ## Local FFmpeg patches
 

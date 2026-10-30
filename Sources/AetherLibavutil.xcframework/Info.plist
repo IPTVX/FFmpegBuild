@@ -7,6 +7,23 @@
 		<dict>
 			<key>BinaryPath</key>
 			<string>AetherLibavutil.framework/AetherLibavutil</string>
+			<key>LibraryIdentifier</key>
+			<string>ios-arm64_x86_64-simulator</string>
+			<key>LibraryPath</key>
+			<string>AetherLibavutil.framework</string>
+			<key>SupportedArchitectures</key>
+			<array>
+				<string>arm64</string>
+				<string>x86_64</string>
+			</array>
+			<key>SupportedPlatform</key>
+			<string>ios</string>
+			<key>SupportedPlatformVariant</key>
+			<string>simulator</string>
+		</dict>
+		<dict>
+			<key>BinaryPath</key>
+			<string>AetherLibavutil.framework/AetherLibavutil</string>
 			<key>DebugSymbolsPath</key>
 			<string>dSYMs</string>
 			<key>LibraryIdentifier</key>
@@ -35,40 +52,6 @@
 			</array>
 			<key>SupportedPlatform</key>
 			<string>tvos</string>
-		</dict>
-		<dict>
-			<key>BinaryPath</key>
-			<string>AetherLibavutil.framework/AetherLibavutil</string>
-			<key>LibraryIdentifier</key>
-			<string>ios-arm64_x86_64-simulator</string>
-			<key>LibraryPath</key>
-			<string>AetherLibavutil.framework</string>
-			<key>SupportedArchitectures</key>
-			<array>
-				<string>arm64</string>
-				<string>x86_64</string>
-			</array>
-			<key>SupportedPlatform</key>
-			<string>ios</string>
-			<key>SupportedPlatformVariant</key>
-			<string>simulator</string>
-		</dict>
-		<dict>
-			<key>BinaryPath</key>
-			<string>AetherLibavutil.framework/Versions/A/AetherLibavutil</string>
-			<key>DebugSymbolsPath</key>
-			<string>dSYMs</string>
-			<key>LibraryIdentifier</key>
-			<string>macos-arm64_x86_64</string>
-			<key>LibraryPath</key>
-			<string>AetherLibavutil.framework</string>
-			<key>SupportedArchitectures</key>
-			<array>
-				<string>arm64</string>
-				<string>x86_64</string>
-			</array>
-			<key>SupportedPlatform</key>
-			<string>macos</string>
 		</dict>
 		<dict>
 			<key>BinaryPath</key>
@@ -118,6 +101,23 @@
 			<string>tvos</string>
 			<key>SupportedPlatformVariant</key>
 			<string>simulator</string>
+		</dict>
+		<dict>
+			<key>BinaryPath</key>
+			<string>AetherLibavutil.framework/Versions/A/AetherLibavutil</string>
+			<key>DebugSymbolsPath</key>
+			<string>dSYMs</string>
+			<key>LibraryIdentifier</key>
+			<string>macos-arm64_x86_64</string>
+			<key>LibraryPath</key>
+			<string>AetherLibavutil.framework</string>
+			<key>SupportedArchitectures</key>
+			<array>
+				<string>arm64</string>
+				<string>x86_64</string>
+			</array>
+			<key>SupportedPlatform</key>
+			<string>macos</string>
 		</dict>
 	</array>
 	<key>CFBundlePackageType</key>
