@@ -65,13 +65,18 @@ Output lands in `Sources/` as xcframeworks, ready to consume via Swift Package M
 
 ## IPTVX fork compatibility
 
-`3.11.0-iptvx` integrates the complete upstream `3.11.0` release and preserves
+`3.12.1-iptvx` integrates the complete upstream `3.12.1` release and preserves
 iOS 16 / tvOS 16 in the package manifest, framework metadata, and compiled
 binaries. macOS 14 and visionOS 1 remain the other deployment floors. The
 upstream FFmpeg patches, dynamic Aether framework names, privacy manifests,
 license notices, and device/macOS dSYMs remain included. DTS:X standard
 presentation heights use FFmpeg's opt-in `dca` `x_heights` decoder option;
 this package adds no LibDTSX or Rust decoder dependency.
+
+The maintained patch inventory and repeatable upgrade checks are documented in
+[IPTVX fork maintenance](docs/iptvx-fork-maintenance.md). This release adds
+AV1 delayed random access detection, opt-in Matroska attachment skipping,
+and Matroska byte-seek recovery after end of stream.
 
 After `./build.sh`, audit every shipped slice with:
 
@@ -86,9 +91,9 @@ must remain paired; lowering the manifest alone is not an OS compatibility
 check. Run the `FFmpegBuildTests` suite through FlowDeck to verify decoder,
 filter, privacy, license, and binary-patch behavior against the rebuilt package.
 
-The `3.11.0-iptvx` rebuild was validated with all 63 platform entries / 90
+The `3.12.1-iptvx` rebuild was validated with all 63 platform entries / 90
 architectures, 45 matching shipped dSYM architectures, and 21 privacy manifests.
-The complete macOS regression suite passed 40 tests, and the packaging audit
+The complete macOS regression suite passed 45 tests, and the packaging audit
 passed 9 tests. These build and binary checks do not establish physical-device
 playback or an OS 16 runtime result.
 
@@ -97,7 +102,7 @@ playback or an OS 16 runtime result.
 ```swift
 // Package.swift
 dependencies: [
-    .package(url: "https://github.com/IPTVX/FFmpegBuild", exact: "3.11.0-iptvx")
+    .package(url: "https://github.com/IPTVX/FFmpegBuild", exact: "3.12.1-iptvx")
 ]
 
 // Target:
@@ -166,7 +171,7 @@ The frameworks that call one of Apple's required-reason APIs carry their own `Pr
 
 ## Local FFmpeg patches
 
-`build.sh` applies ten patches to the FFmpeg source after checkout (each documented in place; the largest lives in `patches/`):
+`build.sh` applies thirteen patches to the FFmpeg source after checkout (each documented in place; standalone patch files live in `patches/`):
 
 - **`patch_ffmpeg`**: balances autoreleased Metal objects in `vf_yadif_videotoolbox.m` (upstream over-release crashes host apps whose GCD queues pop their last-resort autorelease pool at session teardown).
 - **`patch_ffmpeg_pgssub`**: `pgssubdec.c` emits an empty (clearing) subtitle instead of dropping a display set whose palette is missing, outside `AV_EF_EXPLODE`. PGS carries no end time, a cue is closed by the start of its successor, so dropping a damaged set also dropped the successor that closes the previous cue, and the predecessor overstayed its authored end until the next intact set arrived (AetherEngine issue 142). The pts is already set and no rect is allocated at that point, so this is the same clearing form the `object_count == 0` path returns. The first version of this patch instead kept the palette/object cache across an Epoch-Continue PCS; that was withdrawn because retained objects occupy the fixed `MAX_EPOCH_OBJECTS` slots and made a conformant connection set fail with "Too many objects in epoch". Proposed upstream as FFmpeg PR 23851.
@@ -177,6 +182,9 @@ The frameworks that call one of Apple's required-reason APIs carry their own `Pr
 - **`patch_ffmpeg_eac3_dec3`**: `movenc.c` describes a Dolby Digital Plus track whose height channels and Atmos objects live in a dependent substream, the Blu-ray layout of an AC-3 core followed by an E-AC-3 dependent frame. Upstream builds the `dec3` box from the first access unit and gets two of its fields wrong there: `chan_loc` was taken from `chanmap` with a plain shift and a five-bit mask, although `chanmap` is read MSB-first and `chan_loc` spans nine bits, so 5.1.2 came out as no extra channels at all; and `complexity_index_type_a`, the ETSI TS 103 420 JOC extension, was read from the independent substream only, so the box lost it. tvOS then decodes the 5.1 bed and an Atmos receiver reports multichannel PCM (AetherEngine issue 728). The first half is upstream as `f10fdd6310` on master and is skipped once the pinned tag carries it; the second half is proposed upstream as FFmpeg PR 24963.
 - **`patch_ffmpeg_movenc_fragment_end`**: `movenc.c` no longer aborts the process when a fragment is flushed with a packet still waiting in the interleaver that lies behind the samples already written for its track. `mov_flush_fragment` takes that packet's dts as the track end, but `check_pkt` may have moved the written samples past it (the first sample of a fragment is placed at the previous fragment's declared end, and later ones still below it are clamped), so the end fell before the last sample and `get_cluster_duration` hit `av_assert0(next_dts >= 0)`. Such a packet says nothing about where the track ends and is now skipped. Reached through AetherEngine's HLS segment muxer, which uses `frag_custom` and flushes with `av_write_frame(NULL)` (StreamX crash report, 2026-10-10). Proposed upstream as FFmpeg PR 25021.
 - **`patch_ffmpeg_dca_x_heights`** (`patches/dca-xll-x-heights.patch`): the `dca` decoder decodes the height channels of DTS:X's standard presentation. They travel in a regular XLL channel set at the end of every lossless frame, behind the syncword upstream already recognises (it sets the "DTS-HD MA + DTS:X" profile) and then skips; the encoder also folds each of them at -3 dB into the 7.1 bed speaker under it. With the new decoder option `x_heights` (off by default) the decoder reads that channel set with FFmpeg's own XLL code, outputs 7.1.4 and removes the fold from the bed at output resolution. Without the option, and for every stream without the extension, the output is byte-identical to upstream (checked against FATE's DTS suite with and without downmix). A frame whose extension does not decode keeps 7.1.4 with silent heights. The alternate presentations, which carry objects, are left at their 7.1. This replaces LibDTSX in AetherEngine (#798), whose port of this decoder combined with Apache-2.0 code came out LGPL-3.0-or-later.
+- **`patch_ffmpeg_av1_delayed_rap`** (`patches/av1-delayed-rap.patch`): an AV1 Temporal Unit that carries a Sequence Header and opens with a hidden Key Frame (`show_frame = 0`) refreshing all eight reference slots is a keyframe. Encodes built on forward key frames open every GOP that way, and decoding from such a unit is correct right away, but upstream treats it as an inter frame in two places: `av1_parser` reports only a shown Key Frame, and for Matroska video that verdict replaces the block's flag; and muxers (mkvmerge, lavf) leave the SimpleBlock flag off, so `matroskadec` never builds an index and every seek fails, including the one back to the start after probing. The reporting file reached AetherEngine without a single keyframe and never started (AetherEngine issue 931). The patch adds `ff_av1_is_random_access_point()` to `libavformat/av1.c`, which reads the first frame header up to `refresh_frame_flags`; `matroskadec` flags an unflagged AV1 SimpleBlock that passes it and `av1_parser` reports the same case. A hidden Key Frame with a partial refresh, which libaom writes for `--enable-fwd-kf`, is left alone, since frames after it still reference the previous shown Key Frame. Proposed upstream as FFmpeg PR 25607.
+- **`patch_ffmpeg_matroska_skip_attachments`** (`patches/matroska-skip-attachments.patch`): the matroska demuxer gains an AVClass with the option `skip_attachments` (off by default). Matroska attachments, in practice the fonts of ASS subtitles, are read in full while the file opens, before the first packet: tens of megabytes on anime releases, about 11 s of a WAN open in the report (AetherEngine issue 956). With the option the open passes over the Attachments element, both where mkvmerge and lavf write it (before the first Cluster) and behind the Clusters, where mkvpropedit appends it and only the SeekHead points at it. No attachment streams are created, Tags that target one are dropped without a warning, and tracks, their indices and packets are unchanged. Without the option the demuxer is unchanged.
+- **`patch_ffmpeg_matroska_byte_seek_done`** (`patches/matroska-byte-seek-done.patch`): the matroska demuxer forgets an end of stream after a byte seek. It latches end of stream in its private `done` flag, and only its own `read_seek` cleared it, but `AVSEEK_FLAG_BYTE` and the generic fallback a failed index seek takes never reach `read_seek`. So once a file had been read to its end, or a read had failed, every later read returned EOF wherever the seek landed (AetherEngine issue 944: a subtitle side reader read EOF at second 0 of an 888 s file). `read_packet` now honours `io_repositioned` like oggdec and av1dec: it resets the parsing state at the new position, drops queued packets and a pending keyframe skip, and clears the flag.
 - **`patch_ffmpeg_matroska_tts`**: `matroskadec.c` logs a warning when a Matroska track carries a `TrackTimestampScale` other than 1.0. Timestamp behavior stays exactly as upstream implements it, which is what RFC 9559 specifies (block timestamps and BlockDuration are Track Ticks). The element is deprecated (maxver 3) and many readers ignore it, so a file carrying it may have been authored against such readers and mistime silently; the warning surfaces that condition (AetherEngine issue 145). Until 2.1.x this patch clamped TTS to 1.0; the clamp rested on a wrong reading of the RFC and was dropped after upstream review (FFmpeg PR 23852).
 
 ## Build record

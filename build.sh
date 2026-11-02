@@ -1524,6 +1524,62 @@ patch_ffmpeg_dca_x_heights() {
     }
 }
 
+patch_ffmpeg_av1_delayed_rap() {
+    # AetherEngine #931 (FFmpeg PR 25607). A forward key frame encode opens each GOP with a
+    # Temporal Unit holding a Sequence Header and a HIDDEN Key Frame (show_frame = 0). When
+    # that frame refreshes all eight reference slots, decoding can start right there, but
+    # upstream calls it an inter frame twice: av1_parser only reports a shown Key Frame,
+    # and for Matroska video that verdict replaces the block flag; muxers leave the flag
+    # off too, so matroskadec builds no index and every seek fails. The reporting file
+    # reached the engine without a single keyframe. The patch adds
+    # ff_av1_is_random_access_point() (reads the frame header up to refresh_frame_flags),
+    # and both matroskadec and av1_parser use the full-refresh case. libaom's forward key
+    # frames refresh one slot and stay inter frames. It lives in patches/ because it spans
+    # five files.
+    local P="${SCRIPT_DIR}/patches/av1-delayed-rap.patch"
+    if grep -q "ff_av1_is_random_access_point" "${FFMPEG_SRC}/libavformat/av1.h"; then
+        return
+    fi
+    echo "→ Patching FFmpeg: AV1 full-refresh Delayed Random Access Points are keyframes (AetherEngine #931)"
+    git -C "${FFMPEG_SRC}" apply "${P}" || {
+        echo "ERROR: AV1 delayed random access patch did not apply (upstream source changed?)"
+        exit 1
+    }
+}
+
+patch_ffmpeg_matroska_skip_attachments() {
+    # AetherEngine #956. Matroska attachments (in practice the fonts of ASS subtitles, tens of
+    # megabytes on anime releases) are read in full while the file opens, before the first
+    # packet. The patch adds a matroska demuxer option "skip_attachments" (off by default)
+    # that passes over the Attachments element and the SeekHead entry pointing at it, for a
+    # host that does not use the fonts. Without the option the demuxer is unchanged.
+    local P="${SCRIPT_DIR}/patches/matroska-skip-attachments.patch"
+    if grep -q '"skip_attachments"' "${FFMPEG_SRC}/libavformat/matroskadec.c"; then
+        return
+    fi
+    echo "→ Patching FFmpeg: matroska skip_attachments option (AetherEngine #956)"
+    git -C "${FFMPEG_SRC}" apply "${P}" || {
+        echo "ERROR: matroska skip_attachments patch did not apply (upstream source changed?)"
+        exit 1
+    }
+}
+
+patch_ffmpeg_matroska_byte_seek_done() {
+    # AetherEngine #944. matroskadec latches end of stream in its private "done" flag and only
+    # its own read_seek clears it, so after a byte seek (or the generic fallback a failed index
+    # seek takes) every read returned EOF once the file had been read to its end or a read had
+    # failed. The patch makes read_packet honour io_repositioned, like oggdec and av1dec.
+    local P="${SCRIPT_DIR}/patches/matroska-byte-seek-done.patch"
+    if grep -q "end of stream reached before it" "${FFMPEG_SRC}/libavformat/matroskadec.c"; then
+        return
+    fi
+    echo "→ Patching FFmpeg: matroska forgets end of stream after a byte seek (AetherEngine #944)"
+    git -C "${FFMPEG_SRC}" apply "${P}" || {
+        echo "ERROR: matroska byte seek patch did not apply (upstream source changed?)"
+        exit 1
+    }
+}
+
 echo "╔══════════════════════════════════════╗"
 echo "║  FFmpegBuild: FFmpeg + dav1d (AV1)  ║"
 echo "║  VideoToolbox HW + Metal ready      ║"
@@ -1541,6 +1597,9 @@ patch_ffmpeg_mpegts_mpeg1_probe
 patch_ffmpeg_eac3_dec3
 patch_ffmpeg_movenc_fragment_end
 patch_ffmpeg_dca_x_heights
+patch_ffmpeg_av1_delayed_rap
+patch_ffmpeg_matroska_skip_attachments
+patch_ffmpeg_matroska_byte_seek_done
 fetch_dav1d
 fetch_zimg
 fetch_zvbi
