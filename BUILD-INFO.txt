@@ -2,11 +2,11 @@
 
 Written by build.sh. Inputs are captured after patching, outputs after packaging.
 
-Built      2026-11-02T17:22:03Z, linkage dynamic
-Repo HEAD  84729c8d4e9c29b72cfa770272962dc443d7a229 (build.sh or patches/ differ from it)
-build.sh   sha256 133f9270bc1683e841a27830dbd1a2228d96ea26224f50d006b19c2d3954b3bf
+Built      2026-11-06T10:04:28Z, linkage dynamic
+Repo HEAD  e27734fb855d64411003896a44e58af4ed0db730 (build.sh or patches/ differ from it)
+build.sh   sha256 3d51df998a04b254546b0e1099806ac7f7caf2321a6979c30bc77055c0ffa031
 patches/av1-delayed-rap.patch  sha256 0a660e8f3ce01da075ff98ca036be27439a609c89c0e2c182fc8f216ed552e0c
-patches/dca-xll-x-heights.patch  sha256 cf0edad4c71b1672ba8fdca947f3ff8af3204e6f3c5458a4c74c75c3e2e6f15e
+patches/dca-xll-x-heights.patch  sha256 1a2b0a5b5e8cb746632b81c56aa109cea22cc6064f95fc7730f6179705a494d3
 patches/matroska-byte-seek-done.patch  sha256 4b0b5ae407ccab34f6ccd642a9cdc02660820e272ce5f3c40056aefda15009cb
 patches/matroska-skip-attachments.patch  sha256 6b1ae3f6e88f433f913bdb283abce252e9a2e0f1b9c9c26eb16b06d4d6587692
 
@@ -31,7 +31,7 @@ perl       v5.34.1
 
 ## Sources (tag, commit, hash of the changes the patch functions made)
 FFmpeg n8.1.3 1041abdc962f4cc4f394aa8de9dc5236c0c3b9e7
-  changes sha256 49b1e43b6dad423e55f55cc6adff4fd46661afaa2c7443f80058f7819623d564: libavcodec/av1_parser.c libavcodec/dca_xll.c libavcodec/dca_xll.h libavcodec/dcadec.c libavcodec/dcadec.h libavcodec/pgssubdec.c libavcodec/vc1_parser.c libavcodec/videotoolbox.c libavfilter/vf_yadif_videotoolbox.m libavformat/Makefile libavformat/av1.c libavformat/av1.h libavformat/isom_tags.c libavformat/matroskadec.c libavformat/movenc.c libavformat/mpegts.c
+  changes sha256 9ef8d67bbb40491386b0455bef2a774f1e2f849b9455830dc891124af64539e8: libavcodec/av1_parser.c libavcodec/dca_xll.c libavcodec/dca_xll.h libavcodec/dcadec.c libavcodec/dcadec.h libavcodec/pgssubdec.c libavcodec/vc1_parser.c libavcodec/videotoolbox.c libavfilter/vf_yadif_videotoolbox.m libavformat/Makefile libavformat/av1.c libavformat/av1.h libavformat/isom_tags.c libavformat/matroskadec.c libavformat/movenc.c libavformat/mpegts.c
 dav1d 1.5.4 54706fc6bc0cdecab7e9593974a4039cc038fca7
   unmodified
 zimg release-3.0.6 f819b14e8f39d1282400b0d9543e8ef73c1b2bbd
@@ -52,66 +52,66 @@ xros-arm64: --prefix=<repo>/build/thin/xros-arm64 --enable-cross-compile --targe
 xrsimulator-arm64: --prefix=<repo>/build/thin/xrsimulator-arm64 --enable-cross-compile --target-os=darwin --arch=arm64 --cc=/usr/bin/clang --extra-cflags='-arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/XRSimulator.platform/Developer/SDKs/XRSimulator27.0.sdk -target arm64-apple-xros1.0-simulator -fno-common -DHAVE_FORK=0 -gline-tables-only -I<repo>/build/dav1d-thin/xrsimulator-arm64/include -I<repo>/build/zimg-thin/xrsimulator-arm64/include -I<repo>/build/zvbi-thin/xrsimulator-arm64/include' --extra-ldflags='-arch arm64 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/XRSimulator.platform/Developer/SDKs/XRSimulator27.0.sdk -target arm64-apple-xros1.0-simulator -Wl,-headerpad_max_install_names -L<repo>/build/dav1d-thin/xrsimulator-arm64/lib -L<repo>/build/zimg-thin/xrsimulator-arm64/lib -lc++ -L<repo>/build/zvbi-thin/xrsimulator-arm64/lib -liconv' --enable-neon --metalcc='xcrun -sdk xrsimulator metal -target air64-apple-xros1.0-simulator' --metallib='xcrun -sdk xrsimulator metallib' --disable-static --enable-shared --enable-pic --enable-optimizations --disable-stripping --disable-debug --disable-autodetect --disable-doc --disable-programs --disable-devices --disable-outdevs --disable-indevs --disable-avdevice --enable-avfilter --enable-swscale --disable-encoders --disable-muxers --disable-bsfs --disable-network --disable-protocols --disable-d3d11va --disable-dxva2 --disable-vaapi --disable-vdpau --disable-gray --disable-iconv --disable-bzlib --disable-linux-perf --disable-symver --disable-swscale-alpha --enable-avcodec --enable-avformat --enable-avutil --enable-swresample --enable-libzimg --enable-libzvbi --disable-filters --enable-filter=buffer --enable-filter=buffersink --enable-filter=format --enable-filter=scale --enable-filter=zscale --enable-filter=tonemap --enable-filter=colorspace --enable-filter=abuffer --enable-filter=abuffersink --enable-filter=aformat --enable-filter=aresample --enable-filter=dialoguenhance --enable-filter=pan --enable-filter=acompressor --enable-filter=alimiter --enable-filter=bwdif --enable-filter=yadif --enable-filter=idet --enable-filter=fieldmatch --enable-filter=decimate --enable-filter=yadif_videotoolbox --enable-filter=hwupload --enable-metal --enable-videotoolbox --enable-audiotoolbox --enable-libdav1d --enable-protocol=file --enable-protocol=pipe --enable-protocol=data --disable-demuxers --enable-demuxer=hls --enable-demuxer=matroska --enable-demuxer=mov --enable-demuxer=mpegts --enable-demuxer=mpegps --enable-demuxer=avi --enable-demuxer=flv --enable-demuxer=h264 --enable-demuxer=asf --enable-demuxer=hevc --enable-demuxer=aac --enable-demuxer=ac3 --enable-demuxer=eac3 --enable-demuxer=flac --enable-demuxer=ogg --enable-demuxer=wav --enable-demuxer=mp3 --enable-demuxer=srt --enable-demuxer=ass --enable-demuxer=data --enable-demuxer=sup --enable-demuxer=webvtt --enable-demuxer=mpegvideo --enable-demuxer=m4v --enable-demuxer=dts --enable-demuxer=truehd --enable-demuxer=loas --enable-demuxer=rm --enable-demuxer=vobsub --disable-decoders --enable-decoder=h264 --enable-decoder=hevc --enable-decoder=vp8 --enable-decoder=vp9 --enable-decoder=av1 --enable-decoder=libdav1d --enable-decoder=mpeg2video --enable-decoder=mpeg4 --enable-decoder=vc1 --enable-decoder=qtrle --enable-decoder=msmpeg4v1 --enable-decoder=msmpeg4v2 --enable-decoder=msmpeg4v3 --enable-decoder=wmv1 --enable-decoder=wmv2 --enable-decoder=wmv3 --enable-decoder=flv --enable-decoder=vp6 --enable-decoder=vp6a --enable-decoder=vp6f --enable-decoder=wmav1 --enable-decoder=wmav2 --enable-decoder=wmapro --enable-decoder=wmalossless --enable-decoder=wmavoice --enable-decoder=rv10 --enable-decoder=rv20 --enable-decoder=rv30 --enable-decoder=rv40 --enable-decoder=cook --enable-decoder=atrac3 --enable-decoder=sipr --enable-decoder=ralf --enable-decoder=ra_144 --enable-decoder=ra_288 --enable-decoder=h263 --enable-decoder=amrnb --enable-decoder=amrwb --enable-decoder=theora --enable-decoder=pcm_dvd --enable-decoder=aac --enable-decoder=aac_latm --enable-decoder=ac3 --enable-decoder=eac3 --enable-decoder=flac --enable-decoder=mp3 --enable-decoder=mp3float --enable-decoder=opus --enable-decoder=vorbis --enable-decoder=truehd --enable-decoder=mlp --enable-decoder=dca --enable-decoder=alac --enable-decoder=pcm_s16le --enable-decoder=pcm_s24le --enable-decoder=pcm_f32le --enable-decoder=nellymoser --enable-decoder=adpcm_swf --enable-decoder=speex --enable-decoder=pcm_s16be --enable-decoder=pcm_u8 --enable-decoder=pcm_alaw --enable-decoder=pcm_mulaw --enable-decoder=pcm_bluray --enable-decoder=mp2 --enable-decoder=ass --enable-decoder=srt --enable-decoder=subrip --enable-decoder=movtext --enable-decoder=dvdsub --enable-decoder=dvbsub --enable-decoder=pgssub --enable-decoder=webvtt --enable-decoder=libzvbi_teletext --disable-parsers --enable-parser=aac --enable-parser=aac_latm --enable-parser=ac3 --enable-parser=flac --enable-parser=h264 --enable-parser=hevc --enable-parser=mpegaudio --enable-parser=mpeg4video --enable-parser=mpegvideo --enable-parser=opus --enable-parser=vorbis --enable-parser=vp8 --enable-parser=vp9 --enable-parser=av1 --enable-parser=dca --enable-parser=mlp --enable-parser=vc1 --enable-parser=dvbsub --enable-parser=dvdsub --enable-bsf=aac_adtstoasc --enable-bsf=h264_mp4toannexb --enable-bsf=hevc_mp4toannexb --enable-bsf=extract_extradata --enable-bsf=dca_core --enable-muxer=mp4 --enable-muxer=mov --enable-muxer=hls --enable-encoder=flac --enable-encoder=eac3 --enable-encoder=aac --enable-encoder=alac
 
 ## Shipped binaries (sha256)
-f57c49cd5913522ffa95fc1253277ff3d3ca97fb8cfcaea0f347da4df1f9b058  Sources/AetherLibavcodec.xcframework/ios-arm64/AetherLibavcodec.framework/AetherLibavcodec
-b5b5fd58a32d89c5fb719114c06a9b3133c0552ededfa3273e0dcf5256c900fb  Sources/AetherLibavcodec.xcframework/ios-arm64_x86_64-simulator/AetherLibavcodec.framework/AetherLibavcodec
-169f24a93db7e4b1fb78bb5ffc289e84167f5ce6b02b0843dbbeb7138222d85d  Sources/AetherLibavcodec.xcframework/macos-arm64_x86_64/AetherLibavcodec.framework/Versions/A/AetherLibavcodec
-517f39d6d48efe50946ca8443f306f707c0edbbd66b2db45da21c8afc318c463  Sources/AetherLibavcodec.xcframework/tvos-arm64/AetherLibavcodec.framework/AetherLibavcodec
-d61dfe2620c257ebd482a013d1f5bcc3a05abcb93562bd0e1cd2a714be52633e  Sources/AetherLibavcodec.xcframework/tvos-arm64_x86_64-simulator/AetherLibavcodec.framework/AetherLibavcodec
-3ba1998276c642100d33ab67c97ae7ffd5be076f0105c6ffba2a28db8ab112f3  Sources/AetherLibavcodec.xcframework/xros-arm64-simulator/AetherLibavcodec.framework/AetherLibavcodec
-91f3976c7e37c17c18fab203c15f660e1f77fdca78eab76716db648e3cc2b89b  Sources/AetherLibavcodec.xcframework/xros-arm64/AetherLibavcodec.framework/AetherLibavcodec
-10ff1294039c759879327abef5785daf6939217f8c2d01521f54d124762850cd  Sources/AetherLibavfilter.xcframework/ios-arm64/AetherLibavfilter.framework/AetherLibavfilter
-967bd252ab058aba50c1000de3efadbf4a23433a4c7b35d4aa967954c2e2fa9a  Sources/AetherLibavfilter.xcframework/ios-arm64_x86_64-simulator/AetherLibavfilter.framework/AetherLibavfilter
-49b96e1107d7bc9dd9631d81846b74ec992f184ff5b9386d20e007b38836080b  Sources/AetherLibavfilter.xcframework/macos-arm64_x86_64/AetherLibavfilter.framework/Versions/A/AetherLibavfilter
-cb9349dbf3c4d0d640d1616a07e9581ed919034c7cd5fac245ae5b0ff04e03ba  Sources/AetherLibavfilter.xcframework/tvos-arm64/AetherLibavfilter.framework/AetherLibavfilter
-fd11e6e240a84e938eaab980c12e6b4c5bd4f940d2ae77f3bd4bba49e6642826  Sources/AetherLibavfilter.xcframework/tvos-arm64_x86_64-simulator/AetherLibavfilter.framework/AetherLibavfilter
-1e16541adfdc0f9cefc770a0df86972166bf76a610ac0e09297bc038ac9c93d5  Sources/AetherLibavfilter.xcframework/xros-arm64-simulator/AetherLibavfilter.framework/AetherLibavfilter
-8176ad42211449c2446840111c1ab8814de6610563fe745ef414845d60fa3002  Sources/AetherLibavfilter.xcframework/xros-arm64/AetherLibavfilter.framework/AetherLibavfilter
-6905f5db9e54395c0c9fababe4ab1d197d8dd519307ccdeb0991eaf8f511dc84  Sources/AetherLibavformat.xcframework/ios-arm64/AetherLibavformat.framework/AetherLibavformat
-b7167f3dc6df3222737ef33fdca04bd8ab7cb36252f4aab94fb6c0a12766fb23  Sources/AetherLibavformat.xcframework/ios-arm64_x86_64-simulator/AetherLibavformat.framework/AetherLibavformat
-a3d609708602f4e8ee873bc0fe476c8b9203c09f5dd8dcf0ef5e851911738009  Sources/AetherLibavformat.xcframework/macos-arm64_x86_64/AetherLibavformat.framework/Versions/A/AetherLibavformat
-5d18a5101cab77e9f60f522ac0a9b25a5dca3f1fe045ee325b201b4710b49154  Sources/AetherLibavformat.xcframework/tvos-arm64/AetherLibavformat.framework/AetherLibavformat
-b19db520b841c74b27af398533e3c636d3bb3c31efa964c850a787860db275b5  Sources/AetherLibavformat.xcframework/tvos-arm64_x86_64-simulator/AetherLibavformat.framework/AetherLibavformat
-27604f193e7ec195d43af21d41c5c745067a321f447bd711add8b1cc7c376d48  Sources/AetherLibavformat.xcframework/xros-arm64-simulator/AetherLibavformat.framework/AetherLibavformat
-1c2ff8111d368ab1ab878b766f095e7b1b34aa7d7fea72bd3747f0ca748f9abe  Sources/AetherLibavformat.xcframework/xros-arm64/AetherLibavformat.framework/AetherLibavformat
-8d3570f0a21c4227dbda1d83f633dc934ab6fc3cbbe19dc6e681b2bff4bc5aee  Sources/AetherLibavutil.xcframework/ios-arm64/AetherLibavutil.framework/AetherLibavutil
-7bf122fea829c9b85252febcdba2f094922fb4543e40dc77c695d076711855cf  Sources/AetherLibavutil.xcframework/ios-arm64_x86_64-simulator/AetherLibavutil.framework/AetherLibavutil
-485b6d3356a04d4f733655e2ed3e54dedf732b13f3cb1b946e16c1f134b2dca4  Sources/AetherLibavutil.xcframework/macos-arm64_x86_64/AetherLibavutil.framework/Versions/A/AetherLibavutil
-42b11910a5c7c895064eb35f2e497140ff5a21287959e02a372a9e6889065010  Sources/AetherLibavutil.xcframework/tvos-arm64/AetherLibavutil.framework/AetherLibavutil
-1f6595e89a3206586a983197f3816a2511db03fc56441d3fd59d853855897326  Sources/AetherLibavutil.xcframework/tvos-arm64_x86_64-simulator/AetherLibavutil.framework/AetherLibavutil
-80eae757e31af07b1b284601007469be7df03bbddbd1da60e2c68eb5e6c7f763  Sources/AetherLibavutil.xcframework/xros-arm64-simulator/AetherLibavutil.framework/AetherLibavutil
-9f676c488c70a92a29d8caf2e996fdc29767ba992da23bd0e9e2478cf3675034  Sources/AetherLibavutil.xcframework/xros-arm64/AetherLibavutil.framework/AetherLibavutil
-4ac5f09b384d8c0844cdd0e56000260ede61f6380b083efebb1d1e15c1c60612  Sources/AetherLibdav1d.xcframework/ios-arm64/AetherLibdav1d.framework/AetherLibdav1d
-a54edf864304b4856b6db53c9a3ecdbec8bd8e42e51b64f913e95cd9c3f7236b  Sources/AetherLibdav1d.xcframework/ios-arm64_x86_64-simulator/AetherLibdav1d.framework/AetherLibdav1d
-1e38c45d7095f89d1573aca7fcf4f00118568fd78067d706b51aa4fe46d5d5c0  Sources/AetherLibdav1d.xcframework/macos-arm64_x86_64/AetherLibdav1d.framework/Versions/A/AetherLibdav1d
-ba25344af137a279959ab98544d93aac1b3fd500fe0a07e7cd8e5b3a86cc08af  Sources/AetherLibdav1d.xcframework/tvos-arm64/AetherLibdav1d.framework/AetherLibdav1d
-45cd983c965a75e91ec266b7f40e36e4f791b5e44aafbadb2747e44c96931886  Sources/AetherLibdav1d.xcframework/tvos-arm64_x86_64-simulator/AetherLibdav1d.framework/AetherLibdav1d
-8b118b28adcaf9a0dae263970b1f9937946c35def1e2e1255236ca980abd2d28  Sources/AetherLibdav1d.xcframework/xros-arm64-simulator/AetherLibdav1d.framework/AetherLibdav1d
-8a27b4aca602b42ed9f355c292bf1989df57791422d4e0aa48742486e94ca4f0  Sources/AetherLibdav1d.xcframework/xros-arm64/AetherLibdav1d.framework/AetherLibdav1d
-d4d15c91bd92870c0a7e7900c358e21e85ae841e80c891af49f0bc7cd5eebd2c  Sources/AetherLibswresample.xcframework/ios-arm64/AetherLibswresample.framework/AetherLibswresample
-70623ec7738d4728d9bfe243ad82c01e9c2cd7793f81c8c72cea5af42ec7b37d  Sources/AetherLibswresample.xcframework/ios-arm64_x86_64-simulator/AetherLibswresample.framework/AetherLibswresample
-6f09c2ad6a32ed70eb7e7dd3c991f10177e2a11e7abc5bfb6f370aa3b9bcc10a  Sources/AetherLibswresample.xcframework/macos-arm64_x86_64/AetherLibswresample.framework/Versions/A/AetherLibswresample
-2bc49e10584ea032b74feef7a2141ba45fc88e4ea2dc494933c66ab19727a3df  Sources/AetherLibswresample.xcframework/tvos-arm64/AetherLibswresample.framework/AetherLibswresample
-17eab75da22d711ac404aecdb1510c3569a1506750f5f7f68a0f0deb0e34c827  Sources/AetherLibswresample.xcframework/tvos-arm64_x86_64-simulator/AetherLibswresample.framework/AetherLibswresample
-1cf2ef715c70e2ae71822ab0e4f690879df9ec3bdef68b972630fa9c79b15d69  Sources/AetherLibswresample.xcframework/xros-arm64-simulator/AetherLibswresample.framework/AetherLibswresample
-c03884683cd2b5aec9d4493e226cb347673d397be4464577524ad75c7ed21707  Sources/AetherLibswresample.xcframework/xros-arm64/AetherLibswresample.framework/AetherLibswresample
-9b7a321424d40c7660f1751ff48d166eef849995b9ff9772cfa17660e479ce47  Sources/AetherLibswscale.xcframework/ios-arm64/AetherLibswscale.framework/AetherLibswscale
-f156128741e1fb0d41431fea2aa7a9850f057a15da0521a1495bb8942890efa7  Sources/AetherLibswscale.xcframework/ios-arm64_x86_64-simulator/AetherLibswscale.framework/AetherLibswscale
-571e912d05d5ba2bed48858108f63519dab9b43d0be93e443a17704a94102a8c  Sources/AetherLibswscale.xcframework/macos-arm64_x86_64/AetherLibswscale.framework/Versions/A/AetherLibswscale
-b9900fd5d7ed8d0a2c3e222557556a215c7ed7d91cdc2de0dc2aa001dfecad19  Sources/AetherLibswscale.xcframework/tvos-arm64/AetherLibswscale.framework/AetherLibswscale
-efae4dd75d4b9fedef0e4ca7d8190fb6776b87cc8a835ce69ade122f1e8e7c5f  Sources/AetherLibswscale.xcframework/tvos-arm64_x86_64-simulator/AetherLibswscale.framework/AetherLibswscale
-9bc16bcf79c1c35019a1222995823da81bfe9007ca1b6160f459f4913c512206  Sources/AetherLibswscale.xcframework/xros-arm64-simulator/AetherLibswscale.framework/AetherLibswscale
-2d9d6166930598ca6159699ae2d7e6726618f66951880d44c6e04f62444d52cb  Sources/AetherLibswscale.xcframework/xros-arm64/AetherLibswscale.framework/AetherLibswscale
-11d76d71591223cce56b94724ed305d423198c0f10d1e69f2b7f74cad8672a7a  Sources/AetherLibzimg.xcframework/ios-arm64/AetherLibzimg.framework/AetherLibzimg
-a44c7d7a1f54aba7bf48214163dd9d58c518ef8d78d8dee38d94aa25297004fa  Sources/AetherLibzimg.xcframework/ios-arm64_x86_64-simulator/AetherLibzimg.framework/AetherLibzimg
-3efbcd6d2e9b7198f90d735eecd8bc2a8114b9d24a3abc88f9d006d052017c84  Sources/AetherLibzimg.xcframework/macos-arm64_x86_64/AetherLibzimg.framework/Versions/A/AetherLibzimg
-3280d3fd04d403170046bd073b3c529d5693ad8c75fd9a085342e43fa3b8f7d2  Sources/AetherLibzimg.xcframework/tvos-arm64/AetherLibzimg.framework/AetherLibzimg
-d9a4cd9f0557d8a5f817f3aa18ac50968da437743e4904c8f0b64ae2beea62f5  Sources/AetherLibzimg.xcframework/tvos-arm64_x86_64-simulator/AetherLibzimg.framework/AetherLibzimg
-9b896b735b5f71745967b4d3eb063e7118c00ce9ac08d7a2fa2e8f125c519503  Sources/AetherLibzimg.xcframework/xros-arm64-simulator/AetherLibzimg.framework/AetherLibzimg
-891570a2d892a4d603ba291467747504473c1bb0103835b4d4da97e5196422ff  Sources/AetherLibzimg.xcframework/xros-arm64/AetherLibzimg.framework/AetherLibzimg
-d4dada31ffd84c951527a2a21184b55b88942471e333247ad10aca27fafb85ec  Sources/AetherLibzvbi.xcframework/ios-arm64/AetherLibzvbi.framework/AetherLibzvbi
-41c782dfd9c1dcbaaffe55b9503f483ce524992b87580710afbee3960e8dab4b  Sources/AetherLibzvbi.xcframework/ios-arm64_x86_64-simulator/AetherLibzvbi.framework/AetherLibzvbi
-cf96532e46edc14b3b1aadfd582e3669d5e71162c401b7fd4153fdf3fb8fc23c  Sources/AetherLibzvbi.xcframework/macos-arm64_x86_64/AetherLibzvbi.framework/Versions/A/AetherLibzvbi
-cf6115a1eebf29527d94186b408ff7886daf1d02f44ca923127e5afb16763534  Sources/AetherLibzvbi.xcframework/tvos-arm64/AetherLibzvbi.framework/AetherLibzvbi
-2ffa4f948de0a1d01e0ff2d0b385cfa90d6ea7ff2ea0bad45b088426949ffd32  Sources/AetherLibzvbi.xcframework/tvos-arm64_x86_64-simulator/AetherLibzvbi.framework/AetherLibzvbi
-27267525df0841eb48480a4f4e7a8535f9fb72431d1f97b5579c8cce5d688bb6  Sources/AetherLibzvbi.xcframework/xros-arm64-simulator/AetherLibzvbi.framework/AetherLibzvbi
-40b0114ccad2f8c87f2ac308c4373b7a1f1df87ed128e388612bc68d8a641934  Sources/AetherLibzvbi.xcframework/xros-arm64/AetherLibzvbi.framework/AetherLibzvbi
+1b0cda881dcb714b6d7b1ae95bde13f15337901e400f6e9d1022041dd686ffef  Sources/AetherLibavcodec.xcframework/ios-arm64/AetherLibavcodec.framework/AetherLibavcodec
+5e1c54a6f65fd8e4d67f500bbe6c0e815a03ecb58be05bd70425f994612d04db  Sources/AetherLibavcodec.xcframework/ios-arm64_x86_64-simulator/AetherLibavcodec.framework/AetherLibavcodec
+4da876d6483e246dae6cf66fc209c60340de05dfc9fbdd646c60948768e32dc1  Sources/AetherLibavcodec.xcframework/macos-arm64_x86_64/AetherLibavcodec.framework/Versions/A/AetherLibavcodec
+ef03215d1e1d2d77dd9de54cd1ce62609ffde13879bed8c790d495f9b808f459  Sources/AetherLibavcodec.xcframework/tvos-arm64/AetherLibavcodec.framework/AetherLibavcodec
+3221b655ae67dc02597e97269d27468630c691474b35a416f543e21b81ba05fb  Sources/AetherLibavcodec.xcframework/tvos-arm64_x86_64-simulator/AetherLibavcodec.framework/AetherLibavcodec
+341608aa5b0ec528747d460e6c54174a9d399b2f6b0845ece2ab88c5756bcd42  Sources/AetherLibavcodec.xcframework/xros-arm64-simulator/AetherLibavcodec.framework/AetherLibavcodec
+c8d3e787e5c8144616759fea70e7c10d07ecf8af471e0724ad55ebb1cafcd676  Sources/AetherLibavcodec.xcframework/xros-arm64/AetherLibavcodec.framework/AetherLibavcodec
+3cbfd0e7cfdef33dd0fcafd30ad8432c423a3da794653c5cefff0c1c85390c3a  Sources/AetherLibavfilter.xcframework/ios-arm64/AetherLibavfilter.framework/AetherLibavfilter
+cd105e816ee853f83b217a973bf8e2af974bac06744791079fae900037a1283b  Sources/AetherLibavfilter.xcframework/ios-arm64_x86_64-simulator/AetherLibavfilter.framework/AetherLibavfilter
+b4ac6caa1eacdb7fbe54c2f2bf7b74eb2a2ce7b5e51e5866c2f20cb07eb0c331  Sources/AetherLibavfilter.xcframework/macos-arm64_x86_64/AetherLibavfilter.framework/Versions/A/AetherLibavfilter
+ab35d1b1996e93b533f68f9f15aed881592cbf3ab355fd1144518d9dd37edb41  Sources/AetherLibavfilter.xcframework/tvos-arm64/AetherLibavfilter.framework/AetherLibavfilter
+200f9a3a9cc388788564d3dc14fbcb9dd9bd479a76149b463d04534171e41fe2  Sources/AetherLibavfilter.xcframework/tvos-arm64_x86_64-simulator/AetherLibavfilter.framework/AetherLibavfilter
+cf002e4644d83e4213173ca7a982c7040122ec85ebbe3f6cc5e47bfef9a2173f  Sources/AetherLibavfilter.xcframework/xros-arm64-simulator/AetherLibavfilter.framework/AetherLibavfilter
+6fb3e39042ca1583b2cbc5b43df33c16c52e925519c3c6897a024cbd9d08435d  Sources/AetherLibavfilter.xcframework/xros-arm64/AetherLibavfilter.framework/AetherLibavfilter
+e14abc6bdc6fc2217eca5e778e95cb7d630667440296cdc15ec6fe54491fea14  Sources/AetherLibavformat.xcframework/ios-arm64/AetherLibavformat.framework/AetherLibavformat
+e5605335e786d06c6e4e05283cc43f6243dc3614f771119f4120a84e1dcd432a  Sources/AetherLibavformat.xcframework/ios-arm64_x86_64-simulator/AetherLibavformat.framework/AetherLibavformat
+a28fe4cdf9d5495fd9940bfe9bf2d06ea7d18afeb4f94cd478ed8ffd2e2c2191  Sources/AetherLibavformat.xcframework/macos-arm64_x86_64/AetherLibavformat.framework/Versions/A/AetherLibavformat
+de941a40975a57b33abd4657e27a9d23c859b1ddcdb334d0e79ab522004426c9  Sources/AetherLibavformat.xcframework/tvos-arm64/AetherLibavformat.framework/AetherLibavformat
+dfbad45e77fa50fccfe6383e4e52fd21815821cdd4e8f0ce2d6fdc2576197ff8  Sources/AetherLibavformat.xcframework/tvos-arm64_x86_64-simulator/AetherLibavformat.framework/AetherLibavformat
+d5e0e2d5900c440081ec9ac7be249ce9360cd87f2b1f0011b536ecc921b9d2c7  Sources/AetherLibavformat.xcframework/xros-arm64-simulator/AetherLibavformat.framework/AetherLibavformat
+65d9933f7c9ed3b2e7acaf5e8d4aadc5c7d265f3315888bb5f119d2b7c75c309  Sources/AetherLibavformat.xcframework/xros-arm64/AetherLibavformat.framework/AetherLibavformat
+e23a4b12165521945f90c93b8859771bf8e7324c72856ac552e02d32baf358e0  Sources/AetherLibavutil.xcframework/ios-arm64/AetherLibavutil.framework/AetherLibavutil
+0bc8b459012077b56c1acfcc08d10a79c9cf3e7d6d4a3142f335e3313bd82f17  Sources/AetherLibavutil.xcframework/ios-arm64_x86_64-simulator/AetherLibavutil.framework/AetherLibavutil
+79b6454d869d7f1a01d11287e6b0e22c3d07cf2fb1827f6b306aa84427e6a32b  Sources/AetherLibavutil.xcframework/macos-arm64_x86_64/AetherLibavutil.framework/Versions/A/AetherLibavutil
+1c947bee3bf701bb7b9ac69f9af369e78b595dea937959558ccd976d1d678ad6  Sources/AetherLibavutil.xcframework/tvos-arm64/AetherLibavutil.framework/AetherLibavutil
+2f628b26b950655bf8320a9db52a41dfc4f892c64f03ef91617864ad54d9a5aa  Sources/AetherLibavutil.xcframework/tvos-arm64_x86_64-simulator/AetherLibavutil.framework/AetherLibavutil
+a8199b2fcc58860d818eeddb39b98169393a03488bdd0f639575ac6f48f7c7d7  Sources/AetherLibavutil.xcframework/xros-arm64-simulator/AetherLibavutil.framework/AetherLibavutil
+50cda82f223811d063db7be026b2719dd5a35c71fd8b72c5d3bf0b2e9896d121  Sources/AetherLibavutil.xcframework/xros-arm64/AetherLibavutil.framework/AetherLibavutil
+47a5805e4d7c7460191867d3986f05181efbd8804c498e92d929d7ed1ef43dcf  Sources/AetherLibdav1d.xcframework/ios-arm64/AetherLibdav1d.framework/AetherLibdav1d
+3a33d530d02f69125e7961f1433edac562d65ad02977d2d8d37ea0e00717a946  Sources/AetherLibdav1d.xcframework/ios-arm64_x86_64-simulator/AetherLibdav1d.framework/AetherLibdav1d
+9fb6833e282915d89f01b50c1bf7fac0790cc6044d56b0121401e2489497677d  Sources/AetherLibdav1d.xcframework/macos-arm64_x86_64/AetherLibdav1d.framework/Versions/A/AetherLibdav1d
+acbbcaabea4b67cf489f35999009bd99e714e1038073a46251a4330bb350e7b7  Sources/AetherLibdav1d.xcframework/tvos-arm64/AetherLibdav1d.framework/AetherLibdav1d
+6d1f50e528651798b50510541aaf4a74e5c07fc5ee429b12d9f334164cfd4b5b  Sources/AetherLibdav1d.xcframework/tvos-arm64_x86_64-simulator/AetherLibdav1d.framework/AetherLibdav1d
+72b335346be56016b2e914daff76a5a5ac5bab5d8d32bdf6b83c3c075fe1c88f  Sources/AetherLibdav1d.xcframework/xros-arm64-simulator/AetherLibdav1d.framework/AetherLibdav1d
+95d0c97049c68264c80fb5b7f63c6f9e55d74c6d31767ae465b6c9108b1b5167  Sources/AetherLibdav1d.xcframework/xros-arm64/AetherLibdav1d.framework/AetherLibdav1d
+6da66246c7eb5b0e1995be10f4a40030d2ef80b53ea10cdd1fd5ea4204eaec2b  Sources/AetherLibswresample.xcframework/ios-arm64/AetherLibswresample.framework/AetherLibswresample
+01bbdbfc2b21e2bce847122e7bcbc8fb2c352bd0eb269d5dde0f82b48fef2512  Sources/AetherLibswresample.xcframework/ios-arm64_x86_64-simulator/AetherLibswresample.framework/AetherLibswresample
+90614bdfc6d477a273794ed3e111f6efb0f0080b58495aa3f76a1258bdf3412a  Sources/AetherLibswresample.xcframework/macos-arm64_x86_64/AetherLibswresample.framework/Versions/A/AetherLibswresample
+182e82bde3c5300666da8b55f0bf950dd4e00a2e9af5f7cce54d4fd8deda36ec  Sources/AetherLibswresample.xcframework/tvos-arm64/AetherLibswresample.framework/AetherLibswresample
+181117219d23b00cff89b2a13c2c3b3c7e44fff778eef073a13149a95f300ddb  Sources/AetherLibswresample.xcframework/tvos-arm64_x86_64-simulator/AetherLibswresample.framework/AetherLibswresample
+b4827df9892c9532f5ff2934b726f3604717c10df82f5a4c6d92b2494854f89b  Sources/AetherLibswresample.xcframework/xros-arm64-simulator/AetherLibswresample.framework/AetherLibswresample
+2f5d28a4cc843af36bb710cb227f3cff67b30abd901eae92fe6c02db13deb6ee  Sources/AetherLibswresample.xcframework/xros-arm64/AetherLibswresample.framework/AetherLibswresample
+8ac1115b2ece61b8d7ed79eb8504aee69da8854e9945b5d8096b430c0b44fa17  Sources/AetherLibswscale.xcframework/ios-arm64/AetherLibswscale.framework/AetherLibswscale
+5a80c9f419d5c19484e92bab2c3d0c44647870b96ae5190cb4a921f06e953d5a  Sources/AetherLibswscale.xcframework/ios-arm64_x86_64-simulator/AetherLibswscale.framework/AetherLibswscale
+04b885daa9027ec0e48da8f55b6d29bdb4588cff0d4501177a1bddc21540d910  Sources/AetherLibswscale.xcframework/macos-arm64_x86_64/AetherLibswscale.framework/Versions/A/AetherLibswscale
+64abb429ed6505a4aa248cf48665df8d5261539f9e54b9a7a0b1c5ff7db78f5f  Sources/AetherLibswscale.xcframework/tvos-arm64/AetherLibswscale.framework/AetherLibswscale
+b4d1b3c1f149b797fac11f24e9418a2f1eb8dc3d3bd746ec281f951d47d83ed2  Sources/AetherLibswscale.xcframework/tvos-arm64_x86_64-simulator/AetherLibswscale.framework/AetherLibswscale
+d62046e2c70027b35f99cabd93b2f033514e65dc400cd64331bf40b909966b69  Sources/AetherLibswscale.xcframework/xros-arm64-simulator/AetherLibswscale.framework/AetherLibswscale
+9a6d5cb70b95bfc90d809d376ec487914b813a38c0b7f9bd845f83c3fb7eb90b  Sources/AetherLibswscale.xcframework/xros-arm64/AetherLibswscale.framework/AetherLibswscale
+e1252702f36f1d0a6f0861f91c19b2b9e0861a8082acc04226789e1d38dcdc04  Sources/AetherLibzimg.xcframework/ios-arm64/AetherLibzimg.framework/AetherLibzimg
+72d118b824f9df891b24a595fa587263aa02088d2e336b6d297e3c39a9f2c73e  Sources/AetherLibzimg.xcframework/ios-arm64_x86_64-simulator/AetherLibzimg.framework/AetherLibzimg
+5f16830b9ba7deb2bd0421002304bc801c8038f1c1d491b9308a7d1e339d0cbd  Sources/AetherLibzimg.xcframework/macos-arm64_x86_64/AetherLibzimg.framework/Versions/A/AetherLibzimg
+c0eebad6d013bbd72a078ed4635f996b1f1c8ee794dca9b36c769f20337567c3  Sources/AetherLibzimg.xcframework/tvos-arm64/AetherLibzimg.framework/AetherLibzimg
+68c54b66179013c85d6a45d39eee189a72350c4280ad466ec6cfda06c64ae371  Sources/AetherLibzimg.xcframework/tvos-arm64_x86_64-simulator/AetherLibzimg.framework/AetherLibzimg
+82879b160e025bb4bdae3f8315dd8960cd4710e65ee9e56a7066265d38e5f47f  Sources/AetherLibzimg.xcframework/xros-arm64-simulator/AetherLibzimg.framework/AetherLibzimg
+0fbf31e3989c4f10afbff70158dac362bbd0b163d725b6259b25bf4574133ae2  Sources/AetherLibzimg.xcframework/xros-arm64/AetherLibzimg.framework/AetherLibzimg
+887673861ea738668c7ee42eb3673ee6d8297fbf8533fa864ea2f8c6295c68da  Sources/AetherLibzvbi.xcframework/ios-arm64/AetherLibzvbi.framework/AetherLibzvbi
+7116e5be27cffe5dc3b23b2d21657119057763f96636aa07bad32f4393e3a1ba  Sources/AetherLibzvbi.xcframework/ios-arm64_x86_64-simulator/AetherLibzvbi.framework/AetherLibzvbi
+a8ebcb39dae5f893224ebff60530af104135f48aa4c238b100753480f0fb3476  Sources/AetherLibzvbi.xcframework/macos-arm64_x86_64/AetherLibzvbi.framework/Versions/A/AetherLibzvbi
+f5cfb700f61ade947ee530fceb34752a86914fc9530d4c7ae6713d255472a4a2  Sources/AetherLibzvbi.xcframework/tvos-arm64/AetherLibzvbi.framework/AetherLibzvbi
+1020cd799ef944931e643f2980652c5e02ab912cf26de9e2878fde41fbb75b69  Sources/AetherLibzvbi.xcframework/tvos-arm64_x86_64-simulator/AetherLibzvbi.framework/AetherLibzvbi
+846b32ba4946898d1d8139dcbaa7c212a8471ace17257c24f0fda1faa39287a3  Sources/AetherLibzvbi.xcframework/xros-arm64-simulator/AetherLibzvbi.framework/AetherLibzvbi
+858732c252a8cbb5c1a9d67e56acee03bd13289480d5155c6f0595ab27c2f181  Sources/AetherLibzvbi.xcframework/xros-arm64/AetherLibzvbi.framework/AetherLibzvbi

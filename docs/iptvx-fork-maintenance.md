@@ -1,5 +1,20 @@
 # IPTVX FFmpegBuild maintenance
 
+## 3.13.0 integration
+
+The complete upstream 3.13.0 tag is merged into 3.12.1-iptvx. All nine dynamic
+frameworks are rebuilt for every supported architecture with the retained OS16
+floors. The changed DTS:X patch keeps the coded channel bed with its height folds
+intact; the engine's BedRegression now separates it. The optional x_heights flag
+remains off by default. This is FFmpeg's decoder, not LibDTSX or Rust dca.
+No existing correction, privacy manifest, attribution or dSYM is retired.
+
+FlowDeck rebuilt all platforms from source. The complete macOS suite passes 45
+results with no failures or skips. Nine packaging tests pass; the binary audit
+validates 63 platform slices, 90 architectures, 45 matching dSYM architectures and 21 privacy
+manifests. All five input hashes and 63 packaged binary hashes match BUILD-INFO.
+These are automated build/behavior/packaging checks, not physical playback proof.
+
 ## Release ancestry and compatibility
 
 `3.12.1-iptvx` merges the complete upstream `3.12.1` source release
