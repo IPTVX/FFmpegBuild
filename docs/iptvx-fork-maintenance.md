@@ -1,5 +1,47 @@
 # IPTVX FFmpegBuild maintenance
 
+## 3.14.0 integration
+
+Merge upstream `3.14.0` (`2ff2238f6b65d7686e71c8aa9e45fa4e26f33e1d`)
+into `3.13.0-iptvx`. The only fork difference in the upstream build script remains
+framework metadata at iOS/tvOS 16. All nine frameworks are rebuilt, preserving
+all source patches, component configuration, dSYMs, privacy and license files.
+The new DTS:X alternate-presentation parser and `x_presentation` export are the
+unaltered upstream patch. No LibDTSX/Rust dca code or dependency is introduced.
+
+The parser selects alternate syncwords only when `x_heights` is enabled, checks
+prefix/header/NAVI CRCs, decodes only the fixed-height set, and preserves the
+coded bed/object fold. It reports presentation identity only after successful
+height decoding. The default is off. A stream with no heights keeps ordinary
+DTS-HD output; existing height output falls back to silence for malformed frames.
+Source review is not a substitute for playback of every alternate DTS:X variant.
+
+The official FFmpeg FATE sample `dts/master_audio_7.1_24bit.dts` is used locally
+for `Scripts/validate_dts_fixture.sh` (not redistributed here). Its checksum is
+recorded in the validation evidence. The script decodes the sample with heights
+both off and on and compares PCM; run it through a FlowDeck aggregate target.
+It also supports a second package-root argument for comparison with the previous
+release. Actual DTS:X standard/alternate height content needs separate playback
+acceptance; this fixture contains DTS-HD 7.1 without the height extension.
+
+### 3.14.0 validation
+
+FlowDeck full source rebuild passes for all ten target architectures. The complete
+macOS suite passes 46 results with no failures or skips; nine packaging tests
+pass. The binary audit passes all 63 slices, 90 architectures, 45 paired dSYM
+architectures and 21 privacy manifests. All five input hashes and 63 packaged
+binary hashes match `BUILD-INFO.txt`. The four required shaping filters remain
+enabled in all ten build configurations. License files are unchanged upstream.
+
+The new `x_presentation` regression fails against 3.13.0-iptvx and passes against
+this release, proving the added export is consumed at runtime. The FATE DTS-HD
+sample (SHA-256 `227f1008f9529b2bdf937ce856d2562d0128162ac930e2579ef4b8fd7474ee18`)
+decodes 1,172 frames / 600,064 samples identically in both releases with
+`x_heights` off and on (PCM/frame-shape MD5 `b7f5d7e52a3059c182abcd6c7dfa3fac`).
+The new presentation export stays zero because the fixture has no height set.
+This is host decoding evidence, not DTS:X alternate-stream or physical-device
+playback acceptance; the new alternate parser is unchanged upstream source.
+
 ## 3.13.0 integration
 
 The complete upstream 3.13.0 tag is merged into 3.12.1-iptvx. All nine dynamic
@@ -52,7 +94,7 @@ No retained correction is retired in this release.
 | `patch_ffmpeg_mpegts_mpeg1_probe` | Probe ambiguous MPEG-TS MPEG audio correctly. |
 | `patch_ffmpeg_eac3_dec3` | Preserve dependent-substream channel and JOC metadata in `dec3`. |
 | `patch_ffmpeg_movenc_fragment_end` | Reject queued timestamps preceding the fragment's written samples. |
-| `patch_ffmpeg_dca_x_heights` | Keep opt-in DTS:X standard-presentation height decoding. |
+| `patch_ffmpeg_dca_x_heights` | Keep opt-in DTS:X standard/alternate height decoding and its presentation export. |
 | `patch_ffmpeg_av1_delayed_rap` | Admit hidden AV1 keyframes only when every reference slot refreshes. |
 | `patch_ffmpeg_matroska_skip_attachments` | Add opt-in attachment skipping while preserving ordinary stream reads. |
 | `patch_ffmpeg_matroska_byte_seek_done` | Clear terminal Matroska state when byte seeking repositions input. |
