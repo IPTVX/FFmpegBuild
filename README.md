@@ -65,7 +65,7 @@ Output lands in `Sources/` as xcframeworks, ready to consume via Swift Package M
 
 ## IPTVX fork compatibility
 
-`3.14.0-iptvx` integrates the complete upstream `3.14.0` release and preserves
+`3.15.0-iptvx` integrates the complete upstream `3.15.0` release and preserves
 iOS 16 / tvOS 16 in the package manifest, framework metadata, and compiled
 binaries. macOS 14 and visionOS 1 remain the other deployment floors. The
 upstream FFmpeg patches, dynamic Aether framework names, privacy manifests,
@@ -74,8 +74,8 @@ and alternate presentation heights use FFmpeg's opt-in `dca` `x_heights` decoder
 this package adds no LibDTSX or Rust decoder dependency.
 
 The maintained patch inventory and repeatable upgrade checks are documented in
-[IPTVX fork maintenance](docs/iptvx-fork-maintenance.md). This release adds alternate-presentation height decoding and the read-only
-`x_presentation` decoder option. The coded bed retains its height folds;
+[IPTVX fork maintenance](docs/iptvx-fork-maintenance.md). This release adds seven PCM decoders and MPEG-1 Layer I. It retains alternate-
+presentation height decoding and the read-only `x_presentation` decoder option. The coded bed retains its height folds;
 AetherEngine BedRegression separates that bed.
 The existing AV1 and Matroska corrections remain applied.
 
@@ -92,18 +92,12 @@ must remain paired; lowering the manifest alone is not an OS compatibility
 check. Run the `FFmpegBuildTests` suite through FlowDeck to verify decoder,
 filter, privacy, license, and binary-patch behavior against the rebuilt package.
 
-The `3.14.0-iptvx` rebuild was validated with all 63 platform entries / 90
-architectures, 45 matching shipped dSYM architectures, and 21 privacy manifests.
-The complete macOS regression suite passed 46 tests, and the packaging audit
-passed 9 tests. These build and binary checks do not establish physical-device
-playback or an OS 16 runtime result.
-
 ## Use
 
 ```swift
 // Package.swift
 dependencies: [
-    .package(url: "https://github.com/IPTVX/FFmpegBuild", exact: "3.14.0-iptvx")
+    .package(url: "https://github.com/IPTVX/FFmpegBuild", exact: "3.15.0-iptvx")
 ]
 
 // Target:
@@ -136,7 +130,7 @@ What the rename does **not** change is the C symbols: `_avcodec_open2` is still 
 
 - **Video (hardware via VideoToolbox)**: H.264, HEVC up to Main10 (HDR10 / DV Profile 8)
 - **Video (software)**: AV1 (dav1d), VP9, VP8, MPEG-2, MPEG-4, VC-1, QuickTime RLE (qtrle), and the legacy Microsoft tail: MS-MPEG4 v1 / v2 / v3 (DivX 3.x in pre-2005 AVI rips), WMV1 / WMV2, WMV3 (WMV9). A native `.wmv` / `.asf` plays whole: the `asf` demuxer and every WMA decoder ship with it, because a decoder left out is a file with silent audio (the consumer's bridge finds no decoder for the id and the session falls to video-only). The Flash tail is here for the same reason: FLV1 (Sorenson Spark) and On2 VP6 / VP6F / VP6A with the era's audio, so a legacy `.flv` plays whole where before only H.264-in-FLV did. Flash Screen Video stays out, it needs zlib
-- **Audio**: AAC, AC3, EAC3 (incl. JOC detection for Atmos), FLAC, MP2, MP3, Opus, Vorbis, TrueHD, MLP, DTS, ALAC, PCM (incl. Blu-ray LPCM via `pcm_bluray`, G.711 A-law / mu-law, big-endian and unsigned 8-bit), WMA Standard / Pro / Lossless / Voice, Nellymoser Asao, ADPCM-SWF, Speex
+- **Audio**: AAC, AC3, EAC3 (incl. JOC detection for Atmos), FLAC, MP2, MP3, Opus, Vorbis, TrueHD, MLP, DTS, ALAC, PCM (8, 16, 24 and 32-bit integer and 32 / 64-bit float, little and big endian, unsigned 8-bit, G.711 A-law / mu-law, Blu-ray LPCM via `pcm_bluray`, DVD LPCM), MP1, WMA Standard / Pro / Lossless / Voice, Nellymoser Asao, ADPCM-SWF, Speex
 - **Subtitles**: SRT, ASS, SSA, WebVTT, PGS, DVB subtitle, DVB teletext (via libzvbi), DVD
 
 HDR metadata (BT.2020, SMPTE ST 2084 / PQ, HLG, DV RPU) is preserved end-to-end so the decode pipeline can tag frames correctly.

@@ -1,5 +1,51 @@
 # IPTVX FFmpegBuild maintenance
 
+## 3.15.0 integration
+
+Merge the complete upstream `3.15.0` tag
+(`d445e6daa180db73f12d47606a00c914f682e278`) into IPTVX `3.14.0-iptvx`
+(`9f7edc5f19c01b343cd77c99813c2df1125a5dac`). The six upstream commits
+enable `pcm_s8`, `pcm_s24be`, `pcm_s32le`, `pcm_s32be`, `pcm_f32be`,
+`pcm_f64le`, `pcm_f64be` and MPEG-1 Layer I (`mp1`). FFmpeg remains
+`n8.1.3`, and the dav1d, zimg, libzvbi, FFmpeg patches and license inputs
+stay at the same revisions and digests as in `3.14.0-iptvx`.
+
+The only build-script delta against upstream remains the iOS/tvOS 16
+framework metadata. The upstream package declares 16, but its embedded
+iOS and tvOS libavcodec device framework plists declare 26.0 even though
+the corresponding Mach-O slices declare 16.0. The fork builds and packages
+all slices at the retained deployment floors, including macOS 14 and
+visionOS 1. The nine Aether framework/target/install names and optional
+FFmpeg `dca` heights selection are retained. LibDTSX remains excluded.
+
+The rebuild ran from the prepared merge. `BUILD-INFO.txt` captured the
+previous fork HEAD and marked the build script as changed. The actual
+input was the merged build script with SHA-256
+`119ac83372aeff2411a316f69a851451360f702644f2808a44afbdf6b8c14270`;
+both parent revisions are recorded in the integration commit.
+
+### 3.15.0 validation
+
+FlowDeck built all ten platform and architecture configurations. The Swift
+suite on macOS passed all 47 tests, including all decoder registrations,
+DTS:X options and license/privacy checks. The decoder suite detected all
+eight missing registrations against the previous `3.14.0-iptvx` artifacts.
+The nine packaging tests passed.
+
+The deployment audit validated 63 XCFramework slices and 90 Mach-O
+architectures. The 54 iOS and tvOS binary architectures and their framework
+metadata declare 16.0. All 45 shipped dSYM architectures match their binaries.
+All 63 binary and five input SHA-256 hashes match `BUILD-INFO.txt`, and all
+21 privacy manifests are present. Each Aether dylib reference resolves to the
+same platform and architecture. The public libavcodec decoder APIs are
+exported on all ten architectures.
+
+A C probe linked the frameworks on six iOS/tvOS device and simulator target
+configurations at OS 16. On macOS it loaded the packaged dylibs and verified
+all seven PCM decoders against four expected sample values each, then decoded
+one synthetic MP1 frame into 384 samples with a nonzero signal at 44.1 kHz.
+iOS/tvOS runtime on hardware remains part of the playback acceptance matrix.
+
 ## 3.14.0 integration
 
 Merge upstream `3.14.0` (`2ff2238f6b65d7686e71c8aa9e45fa4e26f33e1d`)
