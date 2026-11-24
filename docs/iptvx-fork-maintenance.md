@@ -1,5 +1,105 @@
 # IPTVX FFmpegBuild maintenance
 
+## 3.19.1 integration
+
+The release integrates the complete upstream lightweight tag
+`3.19.1`, `ff514643b8ade86005d2635f9e966ff62cb54982`, including all three
+commits after 3.19.0. The base remains published fork commit
+`f3eca1cae075935cfc46a2e7ec5162a4e88cee35`. The release tag is
+`3.19.1-iptvx`. The existing integration branch remains
+`ibo/codex/ffmpeg-3-19-0` without checkout/reset/rename. The complete earlier
+candidate is preserved at `refs/iptvx-candidates/preserved-7.73.0`.
+
+The sole upstream input change is dav1d 1.5.5, commit
+`6c7bee685677fd997a431302be4fea8ea4017606`. Public headers match 1.5.4
+byte-for-byte and API7.0.0 is unchanged. FlowDeck rebuilt all ten dav1d
+architectures and repackaged all nine XCFrameworks, reusing existing
+FFmpeg/zimg/libzvbi products. All 56 non-dav1d binary hashes match the
+preserved candidate exactly; all seven dav1d slice hashes changed.
+`BUILD-INFO.txt` explicitly records this incremental operation and embeds
+the original 3.19.0 provenance record verbatim with its verified SHA-256.
+Do not describe the reused products as freshly rebuilt or the upstream
+SDK27.2 record as this build: the actual toolchain is Xcode/SDK27.0.
+
+Final verification passes nine frameworks, 63 slices, 90 Mach-O architectures,
+45 paired dSYM architectures, 21 privacy manifests and retained OS floors.
+All nine packaging tests pass. Eleven input hashes, four source states,
+ten configure records and 63 output hashes match the final record.
+The macOS suite reports 59 results: 58 pass, zero fail, one expected skip
+for the unselected no-height variant. A FlowDeck C probe loads actual
+1.5.5/API7.0.0 and decodes 24 AV1 frames identically to the preserved1.5.4
+frameworks (delivered-pixel MD5 `8566478b3b017c838bb38414309a956a`).
+
+No FFmpeg source patch, license text, privacy policy input, Aether identity
+or DTS decoder ownership changes. No LibDTSX/Rust dca is introduced. The
+prior 3.19.0 evidence below remains historical candidate evidence; current
+results and acceptance limits are in `Docs/FFmpegBuild3.19.1Validation.md`
+in the IPTVX integration worktree. Physical app acceptance is separate.
+
+## 3.19.0 integration candidate
+
+The prepared, uncommitted merge integrates the complete upstream `3.19.0`
+annotated tag `d2cdd50519fae7f3ae6983b0534216e78df12614`, peeled to
+`86efc29cd5606d4beee740a5079d123a9abd4b67`, into the published
+`3.15.0-iptvx` commit `f3eca1cae075935cfc46a2e7ec5162a4e88cee35`.
+All 33 intervening upstream commits are included; this is not a selection
+of cherry-picks. No commit, tag or release is published by this preparation.
+The intended release name is `3.19.0-iptvx`.
+
+The FFmpeg base remains `n8.1.3`. The upstream build adds the reviewed
+Dolby Vision MPEG-TS descriptors, optional fragmented-MP4 lazy indexing,
+GPU BWDIF, one-submission GPU YADIF, VC-1/WMV3 frame threading, and GPU
+`fieldmatch_videotoolbox` / `decimate_videotoolbox`. The new YADIF patch
+includes the former autorelease correction; no maintained behavior is
+retired. All 18 upstream FFmpeg patch functions are retained, alongside
+the existing libzvbi LGPL source exclusions.
+
+The build-script difference from upstream is limited to retaining iOS/tvOS
+16 framework metadata. The actual compiler targets remain OS16, macOS14,
+and visionOS1. Preserve all nine Aether framework/product/install names,
+privacy manifests, license texts, dSYMs, shaping filters, and the FFmpeg
+`dca` opt-in height decoder. The `--without-dtsx-heights` upstream option
+is retained but is not selected for this release. LibDTSX and Rust dca
+remain absent.
+
+GPU cadence supports NV12 8-bit 4:2:0 frames with heights divisible by four.
+Other pixel formats and unsupported fieldmatch options are rejected during
+graph configuration. Runtime GPU errors stop the cadence filter; the engine
+owns fallback without discarding its separate GPU deinterlacer. Mac GPU
+measurements do not establish Apple TV performance.
+
+VC-1/WMV3 frame threading does not imply race freedom for damaged streams.
+Upstream reports error-concealment races on corrupt input, including rows
+rewritten after progress publication. Preserve that limitation in acceptance
+reports; registration/opening checks alone do not prove seek or field-picture
+output equality.
+
+### 3.19.0 candidate validation
+
+The full all-platform source rebuild completed through FlowDeck. The final
+audit passed nine frameworks, 63 platform slices, 90 actual Mach-O
+architectures and 45 matching dSYM architectures at the retained floors.
+All 21 privacy manifests are present. Nine packaging tests pass. Independent
+provenance checks match all 11 build/patch input hashes, four source revisions
+and patched-source states, ten configure records and 63 output hashes.
+
+The macOS Swift suite reports 59 results: 58 pass, zero fail, one expected
+skip for the unselected `--without-dtsx-heights` variant. A local C probe
+compares all decoded frame hashes at 1/3/8 threads over three passes with
+flush/seek-to-zero on progressive and interlaced FATE inputs (including six
+field-picture BDUs); all intact output matches. Four deterministic corrupt
+runs terminate without hang/crash, without claiming race freedom.
+
+The upstream GPU kernel harnesses, compiled against the same patched source
+through FlowDeck, pass 15,000 fieldmatch cases / 29,400 compared values and
+288 decimate cases with zero differences from the CPU algorithms. These are
+macOS kernel checks, not Apple TV performance or full app playback proof.
+
+Detailed results and acceptance limits are recorded in
+`Docs/FFmpegBuild3.19.0Validation.md` in the IPTVX integration worktree.
+The local integration branch is `ibo/codex/ffmpeg-3-19-0`; its pending merge
+and the intended `3.19.0-iptvx` tag remain uncommitted/unpublished.
+
 ## 3.15.0 integration
 
 Merge the complete upstream `3.15.0` tag
